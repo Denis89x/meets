@@ -1,4 +1,4 @@
-package dev.lebenkov.meets.storage.dto;
+package dev.lebenkov.meets.storage.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

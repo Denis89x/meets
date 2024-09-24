@@ -3,7 +3,7 @@ package dev.lebenkov.meets.api.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.lebenkov.meets.api.security.JwtUtilService;
 import dev.lebenkov.meets.api.service.TokenService;
-import dev.lebenkov.meets.storage.dto.AuthResponse;
+import dev.lebenkov.meets.storage.dto.auth.AuthResponse;
 import dev.lebenkov.meets.storage.enums.TokenType;
 import dev.lebenkov.meets.storage.model.Token;
 import dev.lebenkov.meets.storage.model.User;
