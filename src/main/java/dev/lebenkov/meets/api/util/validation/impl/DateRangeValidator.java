@@ -3,10 +3,12 @@ package dev.lebenkov.meets.api.util.validation.impl;
 import dev.lebenkov.meets.api.util.validation.ValidDateRange;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 
+@Slf4j
 public class DateRangeValidator implements ConstraintValidator<ValidDateRange, Object> {
 
     private String startField;
@@ -19,7 +21,7 @@ public class DateRangeValidator implements ConstraintValidator<ValidDateRange, O
     }
 
     @Override
-    public boolean isValid(Object o, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Object o, ConstraintValidatorContext context) {
         try {
             Field startDateField = o.getClass().getDeclaredField(startField);
             Field endDateField = o.getClass().getDeclaredField(endField);
@@ -30,16 +32,25 @@ public class DateRangeValidator implements ConstraintValidator<ValidDateRange, O
             Object endDate = endDateField.get(o);
 
             if (startDate == null || endDate == null) {
-                return true; // Пропускаем валидацию, если одно из полей null
+                return true;
             }
 
             if (startDate instanceof LocalDateTime && endDate instanceof LocalDateTime) {
-                return ((LocalDateTime) startDate).isBefore((LocalDateTime) endDate);
+                boolean isValid = ((LocalDateTime) startDate).isBefore((LocalDateTime) endDate);
+
+                if (!isValid) {
+                    context.disableDefaultConstraintViolation();
+                    context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+                            .addPropertyNode(endField)
+                            .addConstraintViolation();
+                }
+
+                return isValid;
             }
 
             return false;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error with date range in DateRangeValidator", e);
             return false;
         }
     }
