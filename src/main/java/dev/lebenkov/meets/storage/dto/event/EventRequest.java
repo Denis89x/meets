@@ -1,6 +1,7 @@
 package dev.lebenkov.meets.storage.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dev.lebenkov.meets.api.util.validation.ValidDateRange;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ValidDateRange(startField = "startTime", endField = "endTime")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventRequest {
 
