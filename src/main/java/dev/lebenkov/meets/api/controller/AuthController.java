@@ -3,23 +3,21 @@ package dev.lebenkov.meets.api.controller;
 import dev.lebenkov.meets.api.service.AuthService;
 import dev.lebenkov.meets.api.service.RegistrationService;
 import dev.lebenkov.meets.api.service.TokenService;
-import dev.lebenkov.meets.storage.dto.AuthResponse;
-import dev.lebenkov.meets.storage.dto.UserAuthRequest;
-import dev.lebenkov.meets.storage.dto.UserRegistrationRequest;
+import dev.lebenkov.meets.storage.dto.auth.AuthResponse;
+import dev.lebenkov.meets.storage.dto.auth.UserAuthRequest;
+import dev.lebenkov.meets.storage.dto.auth.UserRegistrationRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-@Slf4j
 @Validated
 @RestController
 @RequiredArgsConstructor

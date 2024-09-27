@@ -4,8 +4,8 @@ import dev.lebenkov.meets.api.security.JwtUtilService;
 import dev.lebenkov.meets.api.service.RegistrationService;
 import dev.lebenkov.meets.api.service.TokenService;
 import dev.lebenkov.meets.api.util.exc.ObjectAlreadyExistsException;
-import dev.lebenkov.meets.storage.dto.AuthResponse;
-import dev.lebenkov.meets.storage.dto.UserRegistrationRequest;
+import dev.lebenkov.meets.storage.dto.auth.AuthResponse;
+import dev.lebenkov.meets.storage.dto.auth.UserRegistrationRequest;
 import dev.lebenkov.meets.storage.model.User;
 import dev.lebenkov.meets.storage.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -17,7 +17,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Slf4j

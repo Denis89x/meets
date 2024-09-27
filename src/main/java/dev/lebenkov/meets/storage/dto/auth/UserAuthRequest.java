@@ -1,4 +1,4 @@
-package dev.lebenkov.meets.storage.dto;
+package dev.lebenkov.meets.storage.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

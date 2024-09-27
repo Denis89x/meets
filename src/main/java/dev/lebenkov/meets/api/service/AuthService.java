@@ -1,7 +1,7 @@
 package dev.lebenkov.meets.api.service;
 
-import dev.lebenkov.meets.storage.dto.AuthResponse;
-import dev.lebenkov.meets.storage.dto.UserAuthRequest;
+import dev.lebenkov.meets.storage.dto.auth.AuthResponse;
+import dev.lebenkov.meets.storage.dto.auth.UserAuthRequest;
 
 public interface AuthService {
     AuthResponse authenticate(UserAuthRequest authRequest);
