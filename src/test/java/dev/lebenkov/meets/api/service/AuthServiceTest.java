@@ -51,7 +51,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    void AuthService_Authenticate_ReturnsAuthResponse() {
+    public void AuthService_Authenticate_ReturnsAuthResponse() {
         // Arrange
         UserAuthRequest userAuthRequest = UserAuthRequest.builder()
                 .username("username")
