@@ -51,7 +51,7 @@ public class EventCommandServiceImpl implements EventCommandService {
 
     private Event findEventByUserEventIdAndUserId(long eventId) {
         return eventRepository.findByEventIdAndOrganizer_UserId(
-                eventId, sessionUserProviderService.getUserFromSession().getUserId())
+                        eventId, sessionUserProviderService.getUserFromSession().getUserId())
                 .orElseThrow(() -> {
                     log.error("Event with id {} not found", eventId);
                     return new ObjectNotFoundException("Event with " + eventId + " id not found!");
@@ -67,6 +67,10 @@ public class EventCommandServiceImpl implements EventCommandService {
 
     @Override
     public void deleteEvent(Long eventId) {
+        findEventByUserEventIdAndUserId(eventId);
 
+        eventRepository.deleteByEventIdAndOrganizer_UserId(
+                eventId, sessionUserProviderService.getUserFromSession().getUserId()
+        );
     }
 }

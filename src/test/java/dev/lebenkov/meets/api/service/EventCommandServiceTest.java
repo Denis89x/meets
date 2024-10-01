@@ -19,8 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class EventCommandServiceTest {
@@ -86,5 +85,32 @@ public class EventCommandServiceTest {
 
         // Assert
         assertThrows(ObjectNotFoundException.class, () -> eventCommandService.editEvent(1L, eventRequest));
+    }
+
+    @Test
+    public void EventCommandService_DeleteEvent_DeletesWhenEventExists() {
+        // Arrange
+        when(sessionUserProviderService.getUserFromSession()).thenReturn(user);
+        when(eventRepository.findByEventIdAndOrganizer_UserId(anyLong(), anyLong())).thenReturn(Optional.of(event));
+
+        // Act
+        eventCommandService.deleteEvent(1L);
+
+        // Assert
+        verify(eventRepository).findByEventIdAndOrganizer_UserId(1L, user.getUserId());
+        verify(eventRepository).deleteByEventIdAndOrganizer_UserId(1L, event.getOrganizer().getUserId());
+    }
+
+    @Test
+    public void EventCommandService_DeleteEvent_ThrowExceptionWhenEventNotFound() {
+        // Arrange
+        when(sessionUserProviderService.getUserFromSession()).thenReturn(user);
+        when(eventRepository.findByEventIdAndOrganizer_UserId(anyLong(), anyLong())).thenReturn(Optional.empty());
+
+        // Act
+
+        // Assert
+        assertThrows(ObjectNotFoundException.class, () -> eventCommandService.deleteEvent(1L));
+        verify(eventRepository, never()).deleteByEventIdAndOrganizer_UserId(anyLong(), anyLong());
     }
 }
