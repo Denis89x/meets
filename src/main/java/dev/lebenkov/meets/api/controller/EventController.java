@@ -43,4 +43,19 @@ public class EventController {
             @PathVariable("user_id") long userId) {
         return new ResponseEntity<>(eventReadService.fetchAllEventResponsesByUserId(userId), HttpStatus.OK);
     }
+
+    @PatchMapping("/{event_id}")
+    public ResponseEntity<String> editEvent(
+            @PathVariable("event_id") long eventId,
+            @RequestBody @Valid EventRequest eventRequest) {
+        eventCommandService.editEvent(eventId, eventRequest);
+        return new ResponseEntity<>("Event was successfully updated", HttpStatus.OK); // TODO: change
+    }
+
+    @DeleteMapping("/{event_id}")
+    public ResponseEntity<String> deleteEvent(
+            @PathVariable("event_id") long eventId) {
+        eventCommandService.deleteEvent(eventId);
+        return new ResponseEntity<>("Event was successfully deleted", HttpStatus.OK); // TODO: change
+    }
 }
