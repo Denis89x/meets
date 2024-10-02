@@ -1,7 +1,7 @@
 package dev.lebenkov.meets.api.service.impl;
 
+import dev.lebenkov.meets.api.service.EventDetailService;
 import dev.lebenkov.meets.api.service.EventReadService;
-import dev.lebenkov.meets.api.util.exc.ObjectNotFoundException;
 import dev.lebenkov.meets.storage.dto.event.EventResponse;
 import dev.lebenkov.meets.storage.model.Event;
 import dev.lebenkov.meets.storage.repository.EventRepository;
@@ -20,6 +20,7 @@ import java.util.List;
 public class EventReadServiceImpl implements EventReadService {
 
     EventRepository eventRepository;
+    EventDetailService eventDetailService;
 
     private EventResponse convertEventToEventResponse(Event event) {
         return EventResponse.builder()
@@ -36,16 +37,9 @@ public class EventReadServiceImpl implements EventReadService {
                 .build();
     }
 
-    private Event findEventById(Long eventId) {
-        return eventRepository.findById(eventId).orElseThrow(() -> {
-            log.error("Event with id {} not found", eventId);
-            return new ObjectNotFoundException("Event with " + eventId + " id not found!");
-        });
-    }
-
     @Override
     public EventResponse fetchEventResponseById(Long eventId) {
-        return convertEventToEventResponse(findEventById(eventId));
+        return convertEventToEventResponse(eventDetailService.findEventById(eventId));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package dev.lebenkov.meets.api.service.impl;
 
 import dev.lebenkov.meets.api.service.EventCommandService;
+import dev.lebenkov.meets.api.service.EventDetailService;
 import dev.lebenkov.meets.api.service.SessionUserProviderService;
 import dev.lebenkov.meets.api.util.exc.ObjectNotFoundException;
 import dev.lebenkov.meets.storage.dto.event.EventRequest;
@@ -23,6 +24,7 @@ public class EventCommandServiceImpl implements EventCommandService {
 
     ModelMapper modelMapper;
     EventRepository eventRepository;
+    EventDetailService eventDetailService;
     SessionUserProviderService sessionUserProviderService;
 
     private Event convertEventRequestToEvent(EventRequest eventRequest) {
@@ -34,6 +36,7 @@ public class EventCommandServiceImpl implements EventCommandService {
                 .startTime(eventRequest.getStartTime())
                 .endTime(eventRequest.getEndTime())
                 .maxParticipants(eventRequest.getMaxParticipants())
+                .currentParticipants(0)
                 .createdAt(LocalDateTime.now())
                 .organizer(sessionUserProviderService.getUserFromSession())
                 .build();
@@ -49,25 +52,16 @@ public class EventCommandServiceImpl implements EventCommandService {
         return event;
     }
 
-    private Event findEventByUserEventIdAndUserId(long eventId) {
-        return eventRepository.findByEventIdAndOrganizer_UserId(
-                        eventId, sessionUserProviderService.getUserFromSession().getUserId())
-                .orElseThrow(() -> {
-                    log.error("Event with id {} not found", eventId);
-                    return new ObjectNotFoundException("Event with " + eventId + " id not found!");
-                });
-    }
-
     @Override
     public void editEvent(Long eventId, EventRequest eventRequest) {
-        Event event = findEventByUserEventIdAndUserId(eventId);
+        Event event = eventDetailService.findEventByUserEventIdAndUserId(eventId);
 
         eventRepository.save(convertEventRequestToEvent(event, eventRequest));
     }
 
     @Override
     public void deleteEvent(Long eventId) {
-        findEventByUserEventIdAndUserId(eventId);
+        eventDetailService.findEventByUserEventIdAndUserId(eventId);
 
         eventRepository.deleteByEventIdAndOrganizer_UserId(
                 eventId, sessionUserProviderService.getUserFromSession().getUserId()

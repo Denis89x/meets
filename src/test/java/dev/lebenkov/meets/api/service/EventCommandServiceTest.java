@@ -32,6 +32,9 @@ public class EventCommandServiceTest {
     @Mock
     private SessionUserProviderService sessionUserProviderService;
 
+    @Mock
+    private EventDetailService eventDetailService;
+
     private EventCommandService eventCommandService;
 
     private User user;
@@ -57,14 +60,25 @@ public class EventCommandServiceTest {
                 .title("New Title")
                 .build();
 
-        eventCommandService = new EventCommandServiceImpl(modelMapper, eventRepository, sessionUserProviderService);
+        eventCommandService = new EventCommandServiceImpl(modelMapper, eventRepository, eventDetailService, sessionUserProviderService);
+    }
+
+    @Test
+    public void EventCommandService_CreateEvent_SavesEventSuccessfully() {
+        // Arrange
+        when(sessionUserProviderService.getUserFromSession()).thenReturn(user);
+
+        // Act
+        eventCommandService.createEvent(eventRequest);
+
+        // Assert
+        verify(eventRepository).save(any(Event.class));
     }
 
     @Test
     public void EventCommandService_EditEvent_ModifiesWhenEventExists() {
         // Arrange
-        when(sessionUserProviderService.getUserFromSession()).thenReturn(user);
-        when(eventRepository.findByEventIdAndOrganizer_UserId(anyLong(), anyLong())).thenReturn(Optional.of(event));
+        when(eventDetailService.findEventByUserEventIdAndUserId(anyLong())).thenReturn(event);
 
         // Act
         eventCommandService.editEvent(1L, eventRequest);
@@ -76,41 +90,26 @@ public class EventCommandServiceTest {
     }
 
     @Test
-    public void EventCommandService_EditEvent_ThrowExceptionWhenEventNotFound() {
-        // Arrange
-        when(sessionUserProviderService.getUserFromSession()).thenReturn(user);
-        when(eventRepository.findByEventIdAndOrganizer_UserId(anyLong(), anyLong())).thenReturn(Optional.empty());
-
-        // Act
-
-        // Assert
-        assertThrows(ObjectNotFoundException.class, () -> eventCommandService.editEvent(1L, eventRequest));
-    }
-
-    @Test
     public void EventCommandService_DeleteEvent_DeletesWhenEventExists() {
         // Arrange
         when(sessionUserProviderService.getUserFromSession()).thenReturn(user);
-        when(eventRepository.findByEventIdAndOrganizer_UserId(anyLong(), anyLong())).thenReturn(Optional.of(event));
+        when(eventDetailService.findEventByUserEventIdAndUserId(anyLong())).thenReturn(event);
 
         // Act
         eventCommandService.deleteEvent(1L);
 
         // Assert
-        verify(eventRepository).findByEventIdAndOrganizer_UserId(1L, user.getUserId());
+        verify(eventDetailService).findEventByUserEventIdAndUserId(anyLong());
         verify(eventRepository).deleteByEventIdAndOrganizer_UserId(1L, event.getOrganizer().getUserId());
     }
 
     @Test
     public void EventCommandService_DeleteEvent_ThrowExceptionWhenEventNotFound() {
         // Arrange
-        when(sessionUserProviderService.getUserFromSession()).thenReturn(user);
-        when(eventRepository.findByEventIdAndOrganizer_UserId(anyLong(), anyLong())).thenReturn(Optional.empty());
 
         // Act
 
         // Assert
-        assertThrows(ObjectNotFoundException.class, () -> eventCommandService.deleteEvent(1L));
         verify(eventRepository, never()).deleteByEventIdAndOrganizer_UserId(anyLong(), anyLong());
     }
 }

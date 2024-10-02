@@ -12,9 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -26,6 +24,9 @@ public class EventReadServiceTest {
 
     @Mock
     private EventRepository eventRepository;
+
+    @Mock
+    private EventDetailService eventDetailService;
 
     private EventReadService eventReadService;
 
@@ -40,7 +41,7 @@ public class EventReadServiceTest {
                 .username("testUsername")
                 .build();
 
-        eventReadService = new EventReadServiceImpl(eventRepository);
+        eventReadService = new EventReadServiceImpl(eventRepository, eventDetailService);
     }
 
     @Test
@@ -54,7 +55,7 @@ public class EventReadServiceTest {
                 .organizer(user)
                 .build();
 
-        when(eventRepository.findById(anyLong())).thenReturn(Optional.of(event));
+        when(eventDetailService.findEventById(anyLong())).thenReturn(event);
 
         // Act
         EventResponse eventResponse = eventReadService.fetchEventResponseById(eventId);
