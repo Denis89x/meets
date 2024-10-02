@@ -61,6 +61,18 @@ public class EventCommandServiceTest {
     }
 
     @Test
+    public void EventCommandService_CreateEvent_SavesEventSuccessfully() {
+        // Arrange
+        when(sessionUserProviderService.getUserFromSession()).thenReturn(user);
+
+        // Act
+        eventCommandService.createEvent(eventRequest);
+
+        // Assert
+        verify(eventRepository).save(any(Event.class));
+    }
+
+    @Test
     public void EventCommandService_EditEvent_ModifiesWhenEventExists() {
         // Arrange
         when(sessionUserProviderService.getUserFromSession()).thenReturn(user);
