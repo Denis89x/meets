@@ -44,6 +44,9 @@ public class Event {
     @Column(name = "max_participants")
     Integer maxParticipants;
 
+    @Column(name = "current_participants")
+    Integer currentParticipants;
+
     @Column(name = "created_at")
     LocalDateTime createdAt;
 
@@ -53,4 +56,7 @@ public class Event {
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     List<EventMessage> messageList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    List<EventRegistration> registrationList = new ArrayList<>();
 }

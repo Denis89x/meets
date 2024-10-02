@@ -1,5 +1,6 @@
 package dev.lebenkov.meets.storage.model;
 
+import dev.lebenkov.meets.storage.enums.EventStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -21,9 +22,18 @@ public class EventRegistration {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long registrationId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    String status;
+    EventStatus status;
 
     @Column(name = "registered_at")
     LocalDateTime registeredAt;
+
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    Event event;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
 }
