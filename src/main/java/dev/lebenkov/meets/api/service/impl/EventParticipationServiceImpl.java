@@ -104,9 +104,9 @@ public class EventParticipationServiceImpl implements EventParticipationService 
     }
 
     @Override
-    public void processEventApplication(EventProcessRequest eventProcessRequest) {
+    public void processEventApplication(Long eventRegistrationId, EventProcessRequest eventProcessRequest) {
         EventRegistration eventRegistration = eventRegistrationDetailService
-                .findEventRegistrationByIdAndOrganizer(eventProcessRequest.getEventRegistrationId());
+                .findEventRegistrationByIdAndOrganizer(eventRegistrationId);
 
         changeEventRegistrationStatus(eventRegistration, eventProcessRequest.getStatus());
     }

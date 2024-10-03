@@ -6,5 +6,5 @@ import dev.lebenkov.meets.storage.dto.event.registration.EventRegistrationReques
 public interface EventParticipationService {
     void applyForEvent(EventRegistrationRequest eventRegistrationRequest);
 
-    void processEventApplication(EventProcessRequest eventProcessRequest);
+    void processEventApplication(Long eventRegistrationId, EventProcessRequest eventProcessRequest);
 }
